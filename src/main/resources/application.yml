@@ -1,0 +1,64 @@
+spring:
+  application:
+    name: andryukha
+  profiles:
+    default: local
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 10
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+  security:
+    user:
+      name: ${API_USER:admin}
+      password: ${API_PASSWORD}
+      roles: ADMIN
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+server:
+  port: 8080
+  shutdown: graceful
+  error:
+    include-message: never
+    include-stacktrace: never
+management:
+  server:
+    port: 9090
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: never
+      group:
+        readiness:
+          include: readinessState,db
+  metrics:
+    tags:
+      application: ${spring.application.name}
+      environment: ${spring.profiles.active:local}
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+andryukha:
+  telegram:
+    enabled: ${TELEGRAM_ENABLED:false}
+    bot-token: ${TELEGRAM_BOT_TOKEN:}
+  timezone: ${SERVICE_TIMEZONE:Europe/Moscow}
+  recommendations:
+    lead-days: 14
+    overdue-review-days: 60
+    minimum-interval-days: 14
+    maximum-interval-days: 730
+    maximum-interval-ratio: 3.0

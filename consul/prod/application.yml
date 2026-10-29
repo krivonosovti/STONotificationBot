@@ -1,0 +1,15 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+  security:
+    user:
+      name: ${API_USER}
+      password: ${API_PASSWORD}
+logging:
+  level:
+    root: INFO

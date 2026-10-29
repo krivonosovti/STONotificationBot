@@ -1,0 +1,16 @@
+.gradle/
+.gradle-home/
+.kotlin/
+build/
+.idea/
+*.iml
+.DS_Store
+.env
+.env.*
+!.env.example
+data/
+dumps/
+*.dump
+*.backup
+*.sql.gz
+*.log

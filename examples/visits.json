@@ -1,0 +1,7 @@
+{
+  "visits": [
+    {"externalId":"demo-001","customerId":"demo-customer","vehicleId":"demo-car","visitedOn":"2026-02-01","odometerKm":100000,"services":["MAINTENANCE"]},
+    {"externalId":"demo-002","customerId":"demo-customer","vehicleId":"demo-car","visitedOn":"2026-05-02","odometerKm":110000,"services":["MAINTENANCE"]},
+    {"externalId":"demo-003","customerId":"demo-customer","vehicleId":"demo-car","visitedOn":"2026-07-31","odometerKm":120000,"services":["MAINTENANCE"]}
+  ]
+}

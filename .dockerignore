@@ -1,0 +1,13 @@
+.git
+.gradle
+.gradle-home
+.kotlin
+build
+.idea
+**/.env
+**/.env.*
+consul
+data
+dumps
+*.dump
+*.backup

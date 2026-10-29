@@ -1,0 +1,143 @@
+openapi: 3.0.3
+info:
+  title: Telegram Bot API — Andryukha subset
+  version: 1.0.0
+  description: >-
+    Project-maintained subset of the Telegram Bot API, described from the official
+    documentation at https://core.telegram.org/bots/api. This is not an official
+    Telegram OpenAPI distribution. Includes getMe and text sendMessage only;
+    additional Telegram response fields are intentionally ignored by generated DTOs.
+externalDocs:
+  url: https://core.telegram.org/bots/api
+servers:
+  - url: https://api.telegram.org/bot{token}
+    variables:
+      token:
+        default: BOT_TOKEN
+        description: Supplied at runtime; never commit a real token.
+paths:
+  /getMe:
+    get:
+      operationId: getMe
+      summary: Read the authenticated bot identity
+      responses:
+        '200':
+          description: Telegram response envelope
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMeResponse'
+        default:
+          $ref: '#/components/responses/TelegramFailure'
+  /sendMessage:
+    post:
+      operationId: sendMessage
+      summary: Send a plain text message to a numeric chat ID
+      description: >-
+        This subset supports numeric chat_id only. Telegram also accepts usernames,
+        formatting options and other message features that are outside this version.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendMessageRequest'
+      responses:
+        '200':
+          description: Telegram response envelope
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendMessageResponse'
+        default:
+          $ref: '#/components/responses/TelegramFailure'
+components:
+  responses:
+    TelegramFailure:
+      description: Request rejected by Telegram
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  schemas:
+    User:
+      type: object
+      required: [id, is_bot, first_name]
+      properties:
+        id:
+          type: integer
+          format: int64
+        is_bot:
+          type: boolean
+        first_name:
+          type: string
+        username:
+          type: string
+    Chat:
+      type: object
+      required: [id, type]
+      properties:
+        id:
+          type: integer
+          format: int64
+        type:
+          type: string
+    Message:
+      type: object
+      required: [message_id, date, chat]
+      properties:
+        message_id:
+          type: integer
+          format: int64
+        date:
+          type: integer
+          format: int64
+        chat:
+          $ref: '#/components/schemas/Chat'
+        text:
+          type: string
+    SendMessageRequest:
+      type: object
+      required: [chat_id, text]
+      properties:
+        chat_id:
+          type: integer
+          format: int64
+        text:
+          type: string
+          minLength: 1
+          maxLength: 4096
+    GetMeResponse:
+      type: object
+      required: [ok]
+      properties:
+        ok:
+          type: boolean
+        result:
+          $ref: '#/components/schemas/User'
+        description:
+          type: string
+        error_code:
+          type: integer
+    SendMessageResponse:
+      type: object
+      required: [ok]
+      properties:
+        ok:
+          type: boolean
+        result:
+          $ref: '#/components/schemas/Message'
+        description:
+          type: string
+        error_code:
+          type: integer
+    ErrorResponse:
+      type: object
+      required: [ok]
+      properties:
+        ok:
+          type: boolean
+        description:
+          type: string
+        error_code:
+          type: integer

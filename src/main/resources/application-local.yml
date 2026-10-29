@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/andryukha_local}
+    username: ${DB_USER:andryukha}
+    hikari:
+      maximum-pool-size: 5
+logging:
+  level:
+    andryukha: DEBUG

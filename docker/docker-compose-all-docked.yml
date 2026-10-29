@@ -1,0 +1,64 @@
+name: andryukha-local
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: andryukha:local
+    ports: [127.0.0.1:8080:8080]
+    environment:
+      SPRING_PROFILES_ACTIVE: local
+      DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:?Set POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER:?Set POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+      API_USER: ${API_USER:?Set API_USER}
+      API_PASSWORD: ${API_PASSWORD:?Set API_PASSWORD}
+      SERVICE_TIMEZONE: ${SERVICE_TIMEZONE:-Europe/Moscow}
+      TELEGRAM_ENABLED: ${TELEGRAM_ENABLED:-false}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, curl, --fail, --silent, http://localhost:9090/actuator/health/readiness]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+    networks: [backend, monitoring]
+    mem_limit: 768m
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+  postgres:
+    extends:
+      file: docker-compose-local.yml
+      service: postgres
+  prometheus:
+    extends:
+      file: docker-compose-local.yml
+      service: prometheus
+    volumes:
+      - ./monitoring/prometheus/prometheus-all-docked.yml:/etc/prometheus/prometheus.yml:ro
+  grafana:
+    extends:
+      file: docker-compose-local.yml
+      service: grafana
+  tests:
+    extends:
+      file: docker-compose-local.yml
+      service: tests
+  test-postgres:
+    extends:
+      file: docker-compose-local.yml
+      service: test-postgres
+
+volumes:
+  gradle-cache:
+  postgres-data:
+  prometheus-data:
+  grafana-data:
+networks:
+  local-access:
+  backend:
+    internal: true
+  monitoring:

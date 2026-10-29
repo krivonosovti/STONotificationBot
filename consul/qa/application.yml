@@ -1,0 +1,17 @@
+spring:
+  config:
+    activate:
+      on-profile: qa
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 5
+  security:
+    user:
+      name: ${API_USER}
+      password: ${API_PASSWORD}
+logging:
+  level:
+    root: INFO
